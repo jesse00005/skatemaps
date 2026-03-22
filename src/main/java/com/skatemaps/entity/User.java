@@ -56,7 +56,5 @@ public class User {
         ADMIN
     }
 
-    // Getters and setters
-
 
 }

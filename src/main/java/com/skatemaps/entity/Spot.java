@@ -24,7 +24,6 @@ public class Spot {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    // OpenStreetMap Coordinates
     @Setter
     @Column(nullable = false)
     private Double latitude;
@@ -32,6 +31,10 @@ public class Spot {
     @Setter
     @Column(nullable = false)
     private Double longitude;
+
+    @Setter
+    @Column(name = "spot_type")
+    private String spotType;
 
     // Foreign Key to the User Table
     @Setter

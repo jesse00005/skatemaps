@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skatemaps</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<div class="app-container">
+
+    <aside class="sidebar">
+        <header>
+            <h1>SKATEMAPS</h1>
+            <div class="auth-links">
+                <a href="#">Login</a>
+                <a href="#" class="signup-btn">Sign Up</a>
+            </div>
+        </header>
+
+        <div class="search-section">
+            <input type="text" placeholder="Search locations...">
+        </div>
+
+        <div class="filters-section">
+            <h3>Filter by Type</h3>
+            <ul id="filter-list">
+                <li><label><input type="checkbox" value="Rail" checked> Rail <span class="count" id="count-Rail">(0)</span></label></li>
+                <li><label><input type="checkbox" value="Stair" checked> Stair <span class="count" id="count-Stair">(0)</span></label></li>
+                <li><label><input type="checkbox" value="Ledge" checked> Ledge <span class="count" id="count-Ledge">(0)</span></label></li>
+                <li><label><input type="checkbox" value="Park" checked> Park <span class="count" id="count-Park">(0)</span></label></li>
+                <li><label><input type="checkbox" value="Other" checked> Other <span class="count" id="count-Other">(0)</span></label></li>
+            </ul>
+        </div>
+
+        <div class="add-action-area">
+            <p id="add-spot-instructions" class="hidden">Click anywhere on the map to drop a pin.</p>
+            <button class="add-spot-btn" id="add-spot-btn">Add New Spot</button>
+        </div>
+    </aside>
+
+    <main id="map"></main>
+
+    <div id="add-spot-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Add a Spot</h2>
+
+            <form id="add-spot-form">
+                <label>Spot Name</label>
+                <input type="text" id="spot-title" required placeholder="Enter spot name...">
+
+                <label>Description</label>
+                <textarea id="spot-desc" required placeholder="Enter description..."></textarea>
+
+                <label>Spot Type</label>
+                <select id="spot-type">
+                    <option value="Rail">Rail</option>
+                    <option value="Stair">Stair</option>
+                    <option value="Ledge">Ledge</option>
+                    <option value="Park">Park</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <div class="coord-inputs">
+                    <div>
+                        <label>Latitude</label>
+                        <input type="text" id="spot-lat" readonly>
+                    </div>
+                    <div>
+                        <label>Longitude</label>
+                        <input type="text" id="spot-lng" readonly>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-btn" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="submit-btn">Save Spot</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -28,6 +28,15 @@ public class SpotController {
         return spotRepository.findAll();
     }
 
+    @GetMapping("/bounds")
+    public List<Spot> getSpotsInBounds(
+            @RequestParam Double minLat,
+            @RequestParam Double maxLat,
+            @RequestParam Double minLng,
+            @RequestParam Double maxLng) {
+        return spotRepository.findSpotsInBounds(minLat, maxLat, minLng, maxLng);
+    }
+
     @PostMapping("/user/{userId}")
     public ResponseEntity<?> createSpot(@PathVariable Long userId, @RequestBody Spot spot) {
 
