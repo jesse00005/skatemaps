@@ -27,7 +27,7 @@ public class User {
 
     @Setter
     @Column(name = "password_hash", nullable = false)
-    private String password;
+    private String passwordHash;
 
     @Setter
     @Enumerated(EnumType.STRING)

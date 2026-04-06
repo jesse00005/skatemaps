@@ -234,3 +234,69 @@ h1 {
 .crosshair-cursor {
     cursor: crosshair !important;
 }
+
+/* Comments Styling */
+.leaflet-popup-content {
+    width: 250px !important;
+}
+
+.comments-section {
+    margin-top: 15px;
+    border-top: 1px solid #334155;
+    padding-top: 10px;
+}
+
+.comments-section h4 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.comments-list {
+    max-height: 120px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #e2e8f0;
+}
+
+.comment-item {
+    background-color: #1e293b;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: #38bdf8;
+    margin-right: 5px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 5px;
+}
+
+.comment-form input {
+    flex: 1;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #334155;
+    background-color: #0f172a;
+    color: white;
+}
+
+.comment-form button {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 0 10px;
+    font-weight: bold;
+}
+
+.comment-form button:hover {
+    background-color: #2563eb;
+}

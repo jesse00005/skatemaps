@@ -68,6 +68,9 @@
                     <option value="Other">Other</option>
                 </select>
 
+                <label>Spot Photo (Optional)</label>
+                <input type="file" id="spot-image" accept="image/png, image/jpeg">
+
                 <div class="coord-inputs">
                     <div>
                         <label>Latitude</label>
@@ -82,6 +85,24 @@
                 <div class="modal-actions">
                     <button type="button" id="cancel-btn" class="cancel-btn">Cancel</button>
                     <button type="submit" class="submit-btn">Save Spot</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="login-modal" class="modal hidden">
+        <div class="modal-content" style="width: 300px;">
+            <h2>Login</h2>
+            <form id="login-form">
+                <label>Username</label>
+                <input type="text" id="login-username" required>
+
+                <label>Password</label>
+                <input type="password" id="login-password" required>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" onclick="document.getElementById('login-modal').classList.add('hidden')">Cancel</button>
+                    <button type="submit" class="submit-btn">Login</button>
                 </div>
             </form>
         </div>

@@ -1,6 +1,7 @@
 package com.skatemaps.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,9 +23,9 @@ public class Comment {
 
     // Foreign Key to the User
     @Setter
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnoreProperties({"comments", "passwordHash", "email"})
     private User author;
 
     // Foreign Key to the Skate Spot
