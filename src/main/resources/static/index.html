@@ -18,15 +18,17 @@
 
     <aside class="sidebar">
         <header>
-            <h1>SKATEMAPS</h1>
+            <h1>skatemaps</h1>
             <div class="auth-links">
                 <a href="#">Login</a>
                 <a href="#" class="signup-btn">Sign Up</a>
             </div>
         </header>
 
-        <div class="search-section">
-            <input type="text" placeholder="Search locations...">
+        <div class="search-section" style="position: relative;">
+            <input type="text" id="search-input" placeholder="Search locations...">
+
+            <ul id="search-dropdown" class="search-dropdown hidden"></ul>
         </div>
 
         <div class="filters-section">
@@ -105,6 +107,36 @@
                     <button type="submit" class="submit-btn">Login</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal hidden">
+        <div class="modal-content" style="width: 300px;">
+            <h2>Create Account</h2>
+            <form id="register-form">
+                <label>Username</label>
+                <input type="text" id="reg-username" required>
+
+                <label>Password</label>
+                <input type="password" id="reg-password" required>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel-btn" onclick="document.getElementById('register-modal').classList.add('hidden')">Cancel</button>
+                    <button type="submit" class="submit-btn">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="modal hidden">
+        <div class="modal-content" style="width: 400px; max-height: 80vh; overflow-y: auto;">
+            <h2>Admin Dashboard</h2>
+            <div id="admin-user-list" style="margin-top: 15px; color: #e2e8f0;">
+                Loading users...
+            </div>
+            <div class="modal-actions" style="margin-top: 20px;">
+                <button type="button" class="cancel-btn" onclick="document.getElementById('admin-modal').classList.add('hidden')">Close</button>
+            </div>
         </div>
     </div>
 

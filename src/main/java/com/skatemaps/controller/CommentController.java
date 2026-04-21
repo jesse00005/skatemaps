@@ -51,4 +51,10 @@ public class CommentController {
         List<Comment> comments = commentRepository.findBySpotId(spotId);
         return ResponseEntity.ok(comments);
     }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
+        commentRepository.deleteById(commentId);
+        return ResponseEntity.ok().build();
+    }
 }

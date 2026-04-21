@@ -55,4 +55,10 @@ public class SpotController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSpot);
     }
+
+    @DeleteMapping("/{spotId}")
+    public ResponseEntity<?> deleteSpot(@PathVariable Long spotId) {
+        spotRepository.deleteById(spotId);
+        return ResponseEntity.ok().build();
+    }
 }

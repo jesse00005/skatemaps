@@ -48,6 +48,10 @@ function renderMapAndFilters() {
                 popupContent += `<br><img src="/${imagePath}" style="width: 100%; border-radius: 6px; margin-top: 10px;" alt="Spot photo">`;
             }
 
+            if (userRole === 'MODERATOR' || userRole === 'ADMIN') {
+                popupContent += `<br><button onclick="deleteSpot(${spot.id})" style="background: red; color: white; border: none; padding: 5px; margin-top: 10px; cursor: pointer; width: 100%;">Delete Spot</button>`;
+            }
+
             popupContent += `
                 <div class="comments-section">
                     <h4>Comments</h4>
@@ -83,14 +87,57 @@ fetchSpotsInBounds();
 
 let loggedInUserId = localStorage.getItem("userId");
 let loggedInUsername = localStorage.getItem("username");
+let userRole = localStorage.getItem("role");
 
 if (loggedInUsername) {
-    document.querySelector('.auth-links').innerHTML = `<span>Welcome, <b>${loggedInUsername}</b>!</span> <a href="#" onclick="logout()">Logout</a>`;
+    let adminLink = userRole === 'ADMIN' ? `<a href="#" id="nav-admin">Admin Panel</a> | ` : '';
+
+    document.querySelector('.auth-links').innerHTML = `<span>Welcome, <b>${loggedInUsername}</b>!</span> ${adminLink} <a href="#" onclick="logout()">Logout</a>`;
 }
 
-document.querySelector('.auth-links').addEventListener('click', (e) => {
+document.querySelector('.auth-links')?.addEventListener('click', (e) => {
+
+    if (e.target.tagName === 'A') e.preventDefault();
+
     if (e.target.innerText === 'Login') {
         document.getElementById('login-modal').classList.remove('hidden');
+    } else if (e.target.innerText === 'Sign Up') {
+        document.getElementById('register-modal').classList.remove('hidden');
+    } else if (e.target.innerText === 'Admin Panel') {
+        document.getElementById('admin-modal').classList.remove('hidden');
+        loadAdminUsers();
+    }
+});
+
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const regData = {
+        username: document.getElementById('reg-username').value,
+        passwordHash: document.getElementById('reg-password').value
+    };
+
+    try {
+        const response = await fetch('/api/users/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(regData)
+        });
+
+        if (response.ok) {
+            const newUser = await response.json();
+
+            localStorage.setItem("userId", newUser.id);
+            localStorage.setItem("username", newUser.username);
+            localStorage.setItem("role", newUser.role);
+
+            window.location.reload();
+        } else {
+            const errorMessage = await response.text();
+            alert(errorMessage);
+        }
+    } catch (error) {
+        console.error("Registration failed:", error);
     }
 });
 
@@ -114,6 +161,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
             localStorage.setItem("userId", user.id);
             localStorage.setItem("username", user.username);
+            localStorage.setItem("role", user.role);
 
             window.location.reload();
         } else {
@@ -255,10 +303,17 @@ async function loadComments(spotId) {
         comments.forEach(comment => {
             const authorName = comment.author ? comment.author.username : "User";
 
+            let deleteBtn = "";
+
+            if (userRole === 'MODERATOR' || userRole === 'ADMIN') {
+                deleteBtn = `<button onclick="deleteComment(${comment.id}, ${spotId})" style="background: red; color: white; border: none; cursor: pointer; margin-left: 10px;">X</button>`;
+            }
+
             commentsListDiv.innerHTML += `
                 <div class="comment-item">
                     <span class="comment-author">${authorName}:</span>
                     <span>${comment.content}</span>
+                    ${deleteBtn}
                 </div>
             `;
         });
@@ -304,3 +359,117 @@ async function submitComment(spotId) {
         console.error("Fetch error:", error);
     }
 }
+
+async function deleteSpot(spotId) {
+    if (!confirm("Are you sure you want to delete this spot?")) return;
+
+    await fetch(`/api/spots/${spotId}`, { method: 'DELETE' });
+
+    map.closePopup();
+    fetchSpotsInBounds();
+}
+
+async function deleteComment(commentId, spotId) {
+    if (!confirm("Delete this comment?")) return;
+
+    await fetch(`/api/comments/${commentId}`, { method: 'DELETE' });
+
+    loadComments(spotId);
+}
+
+async function loadAdminUsers() {
+    const userListDiv = document.getElementById('admin-user-list');
+
+    try {
+        const response = await fetch('/api/users/all');
+        const users = await response.json();
+
+        userListDiv.innerHTML = "";
+
+        users.forEach(user => {
+            let actionHtml = user.role === 'USER'
+                ? `<button onclick="promoteToModerator(${user.id})" style="background: #10b981; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">Make Mod</button>`
+                : `<span style="color: #94a3b8; font-size: 12px; padding-top: 4px;">${user.role}</span>`;
+
+            userListDiv.innerHTML += `
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #334155; padding: 8px 0;">
+                    <span><b>${user.username}</b></span>
+                    ${actionHtml}
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error("Failed to load users:", error);
+        userListDiv.innerHTML = "<span style='color: red;'>Failed to load users.</span>";
+    }
+}
+
+async function promoteToModerator(userId) {
+    if (!confirm("Are you sure you want to promote this user to Moderator?")) return;
+
+    try {
+        const response = await fetch(`/api/users/${userId}/promote`, { method: 'PUT' });
+
+        if (response.ok) {
+            loadAdminUsers();
+        } else {
+            alert("Error promoting user.");
+        }
+    } catch (error) {
+        console.error("Promote error:", error);
+    }
+}
+
+// --- DEBOUNCED SEARCH AUTOCOMPLETE LOGIC ---
+const searchInput = document.getElementById('search-input');
+const searchDropdown = document.getElementById('search-dropdown');
+let debounceTimer;
+
+searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.trim();
+
+    if (!query) {
+        searchDropdown.classList.add('hidden');
+        searchDropdown.innerHTML = '';
+        return;
+    }
+
+    clearTimeout(debounceTimer);
+
+    debounceTimer = setTimeout(async () => {
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
+            const results = await response.json();
+
+            searchDropdown.innerHTML = '';
+
+            if (results.length > 0) {
+                results.forEach(place => {
+                    const li = document.createElement('li');
+                    li.innerText = place.display_name;
+
+                    li.addEventListener('click', () => {
+                        map.flyTo([place.lat, place.lon], 13);
+
+                        searchInput.value = place.display_name.split(',')[0];
+                        searchDropdown.classList.add('hidden');
+                    });
+
+                    searchDropdown.appendChild(li);
+                });
+
+                searchDropdown.classList.remove('hidden');
+            } else {
+                searchDropdown.classList.add('hidden');
+            }
+        } catch (error) {
+            console.error("Autocomplete error:", error);
+        }
+    }, 500);
+});
+
+document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+        searchDropdown.classList.add('hidden');
+    }
+});
