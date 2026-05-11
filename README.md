@@ -17,7 +17,6 @@
 **Frontend:**
 * HTML5 / CSS3 / Vanilla JavaScript
 * Leaflet.js (Spatial Mapping)
-* Fetch API (Asynchronous REST communication)
 
 **Backend:**
 * Java 17
