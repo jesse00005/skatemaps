@@ -36,7 +36,7 @@ To run this project locally, you will need **Java 17+**, **Maven**, and **MySQL 
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/jesse00005/skatemaps.git](https://github.com/jesse00005/skatemaps.git)
+git clone https://github.com/jesse00005/skatemaps.git
 cd skatemaps
 ```
 
