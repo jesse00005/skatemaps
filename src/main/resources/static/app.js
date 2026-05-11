@@ -203,6 +203,8 @@ addSpotBtn.addEventListener('click', () => {
         addSpotBtn.innerText = "Add New Spot";
         addSpotBtn.style.backgroundColor = "";
     }
+
+
 });
 
 map.on('click', function(e) {
@@ -257,8 +259,19 @@ addSpotForm.addEventListener('submit', async (e) => {
         if (imageInput.files.length > 0) {
             const file = imageInput.files[0];
 
+            if (file.size > 10485760) {
+                alert("Please choose a file under 10MB.");
+                submitBtn.innerText = "Save Spot";
+                submitBtn.disabled = false;
+                return;
+                }
+
+
             const formData = new FormData();
             formData.append("file", file);
+
+
+
 
             const imageResponse = await fetch('/api/images/upload/' + newSpotId, {
                 method: 'POST',
