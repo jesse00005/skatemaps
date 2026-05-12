@@ -1,6 +1,6 @@
-# Skatemaps
+# skatemaps
 
-**Skatemaps** is a full-stack, interactive web application designed for locating, pinning, and discussing local skate spots. Built over a 13-week capstone development cycle, the application features dynamic spatial mapping, relational data management, role-based moderation, and secure user authentication.
+**skatemaps** is a full-stack, interactive web application designed for locating, pinning, and discussing local skate spots. Built over a 13-week capstone development cycle, the application features dynamic spatial mapping, relational data management, role-based moderation, and secure user authentication.
 
 ## Features
 
